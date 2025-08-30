@@ -1,0 +1,266 @@
+<!-- WhatsApp widget fragment - drop this file in the project root and update phoneNumber in the script -->
+<style>
+    :root {
+        --whatsapp: #25D366;
+        --whatsapp-dark: #128C7E;
+        --primary: #2a6f5b
+    }
+
+    .whatsapp-widget {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 10000;
+        font-family: Arial, Helvetica, sans-serif
+    }
+
+    .whatsapp-button {
+        width: 60px;
+        height: 60px;
+        background: var(--whatsapp);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.6rem;
+        box-shadow: 0 5px 20px rgba(37, 211, 102, 0.35);
+        cursor: pointer;
+        transition: transform .15s ease;
+        animation: pulse 2s infinite
+    }
+
+    .whatsapp-button:hover {
+        transform: scale(1.08)
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45)
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(37, 211, 102, 0)
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0)
+        }
+    }
+
+    .whatsapp-chat-box {
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 320px;
+        max-width: calc(100vw - 40px);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: none;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: all .25s ease
+    }
+
+    .whatsapp-chat-box.active {
+        display: block;
+        transform: translateY(0);
+        opacity: 1
+    }
+
+    .chat-header {
+        background: var(--whatsapp);
+        color: #fff;
+        padding: 12px 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center
+    }
+
+    .chat-header img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff
+    }
+
+    .chat-header-info h3 {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1
+    }
+
+    .chat-header-info p {
+        margin: 0;
+        font-size: .78rem;
+        opacity: .9
+    }
+
+    .chat-body {
+        padding: 14px;
+        max-height: 260px;
+        overflow: auto;
+        font-size: .95rem;
+        color: #222
+    }
+
+    .quick-messages {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 6px
+    }
+
+    .message-option {
+        background: #f2f8f4;
+        border-left: 4px solid var(--primary);
+        padding: 10px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform .12s ease, background .12s
+    }
+
+    .message-option:hover {
+        transform: translateX(6px);
+        background: #e9f7ef
+    }
+
+    .chat-footer {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        border-top: 1px solid #eee
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        outline: none;
+        font-size: .95rem
+    }
+
+    .chat-send {
+        width: 40px;
+        height: 40px;
+        background: var(--whatsapp);
+        color: #fff;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer
+    }
+
+    .chat-send:hover {
+        background: var(--whatsapp-dark)
+    }
+
+    @media(max-width:420px) {
+        .whatsapp-chat-box {
+            width: 280px;
+            right: -6px;
+            bottom: 74px
+        }
+
+        .whatsapp-widget {
+            right: 16px;
+            bottom: 16px
+        }
+    }
+</style>
+
+<div class="whatsapp-widget" id="waWidget" aria-hidden="false">
+    <div class="whatsapp-button" id="whatsappButton" aria-label="Open WhatsApp chat" title="Chat with us">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    </div>
+
+    <div class="whatsapp-chat-box" id="chatBox" role="dialog" aria-hidden="true" aria-label="WhatsApp chat">
+        <div class="chat-header">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+                alt="Agent">
+            <div class="chat-header-info">
+                <h3>Plantago Lanceolata</h3>
+                <p>Typically replies within minutes</p>
+            </div>
+        </div>
+
+        <div class="chat-body">
+            <div>Hi there! 👋 How can we help you today?</div>
+            <div class="quick-messages" id="quickMessages">
+                <div class="message-option" data-message="Hello, I'd like information about your services.">Services
+                    Inquiry</div>
+                <div class="message-option" data-message="I need assistance with a Water Use License Application.">WULA
+                    Assistance</div>
+                <div class="message-option"
+                    data-message="Can you provide information about your mining permit application process?">Mining
+                    Permit Info</div>
+                <div class="message-option" data-message="I'd like to discuss a potential project with your team.">
+                    Project Discussion</div>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="customMessage" class="chat-input" placeholder="Type your message..."
+                aria-label="Type your message">
+            <button id="sendMessage" class="chat-send" aria-label="Send message"><i
+                    class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const whatsappButton = document.getElementById('whatsappButton');
+        const chatBox = document.getElementById('chatBox');
+        const messageOptions = document.querySelectorAll('.message-option');
+        const customMessageInput = document.getElementById('customMessage');
+        const sendMessageButton = document.getElementById('sendMessage');
+
+        // TODO: replace with your full phone number without the plus sign, e.g. "27636340952"
+        const phoneNumber = "27635440952";
+
+        whatsappButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const open = chatBox.classList.toggle('active');
+            chatBox.setAttribute('aria-hidden', !open);
+            if (open) customMessageInput.focus();
+        });
+
+        messageOptions.forEach(option => option.addEventListener('click', function () { openWhatsApp(this.dataset.message || ''); }));
+
+        sendMessageButton.addEventListener('click', function () {
+            const msg = (customMessageInput.value || '').trim(); if (msg) openWhatsApp(msg);
+        });
+
+        customMessageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { const msg = (customMessageInput.value || '').trim(); if (msg) openWhatsApp(msg); }
+        });
+
+        function openWhatsApp(message) {
+            const encoded = encodeURIComponent(message || '');
+            const url = `https://wa.me/${phoneNumber}?text=${encoded}`;
+            window.open(url, '_blank');
+            chatBox.classList.remove('active');
+            chatBox.setAttribute('aria-hidden', 'true');
+            customMessageInput.value = '';
+        }
+
+        document.addEventListener('click', function (ev) {
+            if (!ev.target.closest('#waWidget') && chatBox.classList.contains('active')) {
+                chatBox.classList.remove('active'); chatBox.setAttribute('aria-hidden', 'true');
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && chatBox.classList.contains('active')) {
+                chatBox.classList.remove('active'); chatBox.setAttribute('aria-hidden', 'true');
+            }
+        });
+    })();
+</script>
