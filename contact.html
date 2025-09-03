@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Plantago Lanceolata Environmental Consultancy</title>
     <link rel="icon" href="Images/Plantago fav.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="Images/Plantago fav.ico" type="image/x-icon">
     <meta name="description"
         content="Contact Plantago Lanceolata for expert environmental consulting services. Get in touch with our qualified team for your next project.">
     <link
@@ -14,36 +13,33 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="main.js">
-
     <!-- WhatsApp widget -->
     <script src="assets/js/widget-loader.js" defer></script>
 </head>
 
 <body>
     <div id="header-placeholder"></div>
-     <nav class="navbar">
-        <div class="container nav-container">
-            <a href="#" style="display:flex; align-items:center; text-decoration:none;">
-                <img src="Images/Plantago.png" alt="Plantago Logo" style="height:50px; margin-right:12px;">
-                <span style="font-size:20px; font-weight:bold; color:rgb(77, 77, 6);">
-                    Plantago Lanceolata
-                </span>
-            </a>
+     <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container nav-container">
+        <a href="index.html" class="logo" aria-label="Plantago Lanceolata home">
+            <img src="Images/Plantago.png" alt="Plantago logo" class="logo-img" loading="lazy">
+            <span class="site-title">Plantago Lanceolata</span>
+        </a>
 
+        <button class="hamburger" aria-controls="primary-navigation" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
 
-            <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-                <i class="fas fa-bars"></i>
-            </div>
-        </div>
-    </nav>
+        <ul id="primary-navigation" class="nav-links" data-visible="false">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="services.html" class="nav-link">Services</a></li>
+            <li><a href="projects.html" class="nav-link">Projects</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+    </div>
+</nav>
 
     <!-- added hero section for contact -->
     <section class="hero page-hero contact-hero" id="contact-hero">
