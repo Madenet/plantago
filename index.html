@@ -8,7 +8,6 @@
     <meta name="description"
         content="Leading environmental management, town planning, and mining application specialists with 15+ years experience across South Africa.">
     <link rel="icon" href="Images/Plantago fav.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="Images/Plantago fav.ico" type="image/x-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -710,8 +709,18 @@
             s.defer = true;
             document.body.appendChild(s);
 
-            // Initialize navigation after header loads
-            setTimeout(() => { initializeNavigation(); }, 100);
+            // Initialize navigation after header loads — wait for nav/hamburger to exist
+            async function waitForSelector(selector, timeout = 5000) {
+                const start = Date.now();
+                while (Date.now() - start < timeout) {
+                    if (document.querySelector(selector)) return true;
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                return false;
+            }
+
+            await waitForSelector('#main-nav, .hamburger', 5000);
+            initializeNavigation();
         });
 
         function initializeNavigation() {
