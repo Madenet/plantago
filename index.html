@@ -216,7 +216,7 @@
             font-weight: bold;
             margin-bottom: 12px;
             text-shadow: 0 3px 6px rgba(150, 150, 148, 0.418);
-            color:rgba(255, 238, 0, 0.596);
+            color: rgba(255, 238, 0, 0.596);
         }
 
         .carousel-caption p {
@@ -727,7 +727,7 @@
         function initializeNavigation() {
             // Navbar scroll effect
             window.addEventListener('scroll', () => {
-                const navbar = document.querySelector('.navbar');
+                const navbar = document.querySelector('.navbar, nav');
                 if (navbar && window.scrollY > 50) {
                     navbar.classList.add('scrolled');
                 } else if (navbar) {
@@ -735,20 +735,95 @@
                 }
             });
 
-            // Mobile menu toggle
-            const hamburger = document.querySelector('.hamburger');
-            const nav = document.getElementById('main-nav');
-            const navLinks = document.querySelector('.nav-links');
+            // Robust mobile menu toggle for any injected header/nav
+            const toggles = Array.from(document.querySelectorAll('.hamburger, .nav-toggle, [data-nav-toggle]'));
+            if (!toggles.length) return;
 
-            if (hamburger && nav) {
-                // toggle both nav container and links for CSS to respond
-                hamburger.addEventListener('click', () => {
-                    nav.classList.toggle('open');
-                    if (navLinks) navLinks.classList.toggle('active');
-                    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
-                    hamburger.setAttribute('aria-expanded', (!expanded).toString());
+            toggles.forEach(btn => {
+                if (btn.dataset.navInit) return; // don't double-init
+                btn.dataset.navInit = 'true';
+
+                // ensure it's keyboard-focusable & has aria
+                if (btn.tagName.toLowerCase() !== 'button') {
+                    btn.setAttribute('role', 'button');
+                    btn.tabIndex = btn.tabIndex >= 0 ? btn.tabIndex : 0;
+                }
+                if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
+
+                // find associated nav/menu
+                const targetId = btn.getAttribute('aria-controls') || btn.dataset.target || btn.dataset.navTarget;
+                let menu = targetId ? document.getElementById(targetId) : null;
+                if (!menu) {
+                    // prefer nearest header/nav, fallback to common selectors
+                    menu = btn.closest('header')?.querySelector('nav, .navbar, #main-nav, .nav-menu') ||
+                        document.querySelector('nav, .navbar, #main-nav, .nav-menu');
+                }
+                if (!menu) return;
+
+                // ensure accessible role
+                if (!menu.hasAttribute('role')) menu.setAttribute('role', 'navigation');
+
+                const closeMenu = () => {
+                    if (menu.hasAttribute('hidden')) return;
+                    menu.setAttribute('hidden', '');
+                    menu.classList.remove('open', 'active');
+                    btn.setAttribute('aria-expanded', 'false');
+                };
+                const openMenu = () => {
+                    if (!menu.hasAttribute('hidden')) return;
+                    menu.removeAttribute('hidden');
+                    menu.classList.add('open', 'active');
+                    btn.setAttribute('aria-expanded', 'true');
+                };
+                const toggle = () => {
+                    if (menu.hasAttribute('hidden')) openMenu(); else closeMenu();
+                };
+
+                // initialize hidden state if not present and viewport is mobile
+                if (!menu.hasAttribute('hidden') && window.innerWidth <= 900) {
+                    menu.setAttribute('hidden', '');
+                }
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggle();
                 });
-            }
+
+                // support Enter/Space on non-button toggles
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggle();
+                    }
+                });
+
+                // click outside to close
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !btn.contains(e.target) && !menu.hasAttribute('hidden')) {
+                        closeMenu();
+                    }
+                });
+
+                // close on Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !menu.hasAttribute('hidden')) {
+                        closeMenu();
+                    }
+                });
+
+                // close when window resizes to desktop
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 900 && !menu.hasAttribute('hidden')) {
+                        // show permanently on desktop: remove hidden and any mobile-only classes
+                        menu.removeAttribute('hidden');
+                        menu.classList.remove('open', 'active');
+                        btn.setAttribute('aria-expanded', 'false');
+                    } else if (window.innerWidth <= 900) {
+                        // ensure menu is hidden by default on mobile
+                        if (!menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
+                    }
+                });
+            });
         }
 
         // Hero animations
