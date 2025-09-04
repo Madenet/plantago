@@ -87,6 +87,27 @@ a {
   box-shadow: 0 6px 20px rgba(42, 111, 91, 0.4);
 }
 
+/* Disable accidental reflection or background-logo pseudo-elements */
+img[alt*="Plantago"], .site-logo, .site-title, .navbar img {
+  -webkit-box-reflect: none !important;
+  box-reflect: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  background-image: none !important;
+}
+
+/* hide any pseudo-element that might be drawing a mirrored logo */
+.site-logo::after,
+.site-title::after,
+.header::after,
+.hero::after,
+.navbar::after,
+.logo-reflection {
+  display: none !important;
+  content: none !important;
+  background-image: none !important;
+}
+
 .btn-outline {
   background: #ff9800;
   border: 2px solid var(--primary);
