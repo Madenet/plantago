@@ -18,26 +18,25 @@
 </head>
 
 <body>
-    <div id="header-placeholder"></div>
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <nav id="main-nav" class="navbar" role="navigation" aria-label="Main navigation">
         <div class="container nav-container">
-            <a href="index.html" class="logo" aria-label="Plantago Lanceolata home">
-                <img src="Images/Plantago.png" alt="Plantago logo" class="logo-img" loading="lazy">
-                <span class="site-title">Plantago Lanceolata</span>
+            <a href="index.html" style="display:flex; align-items:center; text-decoration:none;">
+                <img src="Images/Plantago.png" alt="Plantago Logo" style="height:50px; margin-right:12px;">
+                <span style="font-size:25px; font-weight:bold; color:rgb(77, 77, 6);">
+                    Plantago Lanceolata
+                </span>
             </a>
 
-            <button class="hamburger" aria-controls="primary-navigation" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <button class="hamburger" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation">
                 <i class="fas fa-bars" aria-hidden="true"></i>
             </button>
-
-            <ul id="primary-navigation" class="nav-links" data-visible="false">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="projects.html" class="nav-link">Projects</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
         </div>
     </nav>
 
@@ -100,7 +99,8 @@
                         </div>
                         <div class="contact-details">
                             <h4>Email</h4>
-                            <p><a href="mailto:divhani01@plantagolance.co.za">divhani01@plantagolance.co.za</a><br>
+                            <p><a
+                            href="mailto:divhani01@plantagolance.co.za">divhani01@plantagolance.co.za</a><br>
                                 We respond within 24 hours</p>
                         </div>
                     </div>
@@ -113,12 +113,12 @@
                             <h4>Office Locations</h4>
                             <b><strong>Gauteng Office:</strong><br>
                                 <a href="https://www.google.com/maps/search/?api=1&query=93+Lyttelton+Rd+Centurion+Clubview+0157"
-                                    target="_blank" rel="noopener">93 Lyttelton Road, Centurion, Clubview,
-                                    0157</a></br>
+                            target="_blank" rel="noopener">93 Lyttelton Road, Centurion, Clubview,
+                            0157</a></br>
                                 <strong>Limpopo Office:</strong><br>
                                 <a href="https://www.google.com/maps/search/?api=1&query=78+Dorp+St+Polokwane+0700"
-                                    target="_blank" rel="noopener">78 Dorp Street, Polokwane, 0700</a>
-                                </p>
+                            target="_blank" rel="noopener">78 Dorp Street, Polokwane, 0700</a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -131,23 +131,23 @@
                     <form class="inquiry-form" id="inquiry-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="firstName" placeholder=" " required>
-                                <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder=" " required>
+                            <label class="form-label">First Name</label>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="lastName" placeholder=" " required>
-                                <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder=" " required>
+                            <label class="form-label">Last Name</label>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="email" class="form-control" id="email" placeholder=" " required>
-                                <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder=" " required>
+                            <label class="form-label">Email Address</label>
                             </div>
                             <div class="form-group">
-                                <input type="tel" class="form-control" id="phone" placeholder=" " required>
-                                <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" placeholder=" " required>
+                            <label class="form-label">Phone Number</label>
                             </div>
                         </div>
 
@@ -158,53 +158,51 @@
 
                         <div class="form-group">
                             <select class="form-control" id="service" required>
-                                <option value="">Select Primary Service Needed</option>
-                                <option value="eia">Environmental Impact Assessment</option>
-                                <option value="wula">Water Use License Application</option>
-                                <option value="mining">Mining Rights & Permits</option>
-                                <option value="planning">Town Planning & Development</option>
-                                <option value="renewable">Renewable Energy Projects</option>
-                                <option value="compliance">Environmental Compliance</option>
-                                <option value="section24g">Section 24G Applications</option>
-                                <option value="other">Other Services</option>
+                            <option value="">Select Primary Service Needed</option>
+                            <option value="eia">Environmental Impact Assessment</option>
+                            <option value="wula">Water Use License Application</option>
+                            <option value="mining">Mining Rights & Permits</option>
+                            <option value="planning">Town Planning & Development</option>
+                            <option value="renewable">Renewable Energy Projects</option>
+                            <option value="compliance">Environmental Compliance</option>
+                            <option value="section24g">Section 24G Applications</option>
+                            <option value="other">Other Services</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <select class="form-control" id="province" required>
-                                <option value="">Project Location (Province)</option>
-                                <option value="gauteng">Gauteng</option>
-                                <option value="limpopo">Limpopo</option>
-                                <option value="northwest">North West</option>
-                                <option value="mpumalanga">Mpumalanga</option>
-                                <option value="kwazulu-natal">KwaZulu-Natal</option>
-                                <option value="free-state">Free State</option>
-                                <option value="eastern-cape">Eastern Cape</option>
-                                <option value="western-cape">Western Cape</option>
-                                <option value="northern-cape">Northern Cape</option>
+                            <option value="">Project Location (Province)</option>
+                            <option value="gauteng">Gauteng</option>
+                            <option value="limpopo">Limpopo</option>
+                            <option value="northwest">North West</option>
+                            <option value="mpumalanga">Mpumalanga</option>
+                            <option value="kwazulu-natal">KwaZulu-Natal</option>
+                            <option value="free-state">Free State</option>
+                            <option value="eastern-cape">Eastern Cape</option>
+                            <option value="western-cape">Western Cape</option>
+                            <option value="northern-cape">Northern Cape</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <textarea class="form-control" id="description" placeholder=" " rows="5"
-                                required></textarea>
+                            <textarea class="form-control" id="description" placeholder=" " rows="5" required></textarea>
                             <label class="form-label">Project Description & Requirements</label>
                         </div>
 
                         <div class="form-group">
                             <select class="form-control" id="timeline">
-                                <option value="">Project Timeline</option>
-                                <option value="urgent">Urgent (Within 1 month)</option>
-                                <option value="soon">Soon (1-3 months)</option>
-                                <option value="planning">Planning Phase (3-6 months)</option>
-                                <option value="future">Future Project (6+ months)</option>
+                            <option value="">Project Timeline</option>
+                            <option value="urgent">Urgent (Within 1 month)</option>
+                            <option value="soon">Soon (1-3 months)</option>
+                            <option value="planning">Planning Phase (3-6 months)</option>
+                            <option value="future">Future Project (6+ months)</option>
                             </select>
                         </div>
 
                         <button type="submit" class="btn btn-secondary">Submit Inquiry</button>
                         <p class="form-note">We'll respond within 24 hours with a detailed consultation proposal.</p>
-                        <div class="alert" style="display:none; color:green; margin-top:10px;">Inquiry submitted
-                            successfully!</div>
+                        <div class="alert" style="display:none; color:green; margin-top:10px;">Inquiry submitted successfully!</div>
                     </form>
 
                 </div>
@@ -289,57 +287,15 @@
                 }
             });
 
-            // Attach each hamburger to its corresponding menu
-            const toggles = Array.from(document.querySelectorAll('.hamburger, .nav-toggle, [data-nav-toggle]'));
-            toggles.forEach(btn => {
-                if (btn.dataset.navInit) return;
-                btn.dataset.navInit = '1';
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
 
-                if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
-
-                const targetId = btn.getAttribute('aria-controls') || btn.dataset.target || btn.dataset.navTarget;
-                let menu = targetId ? document.getElementById(targetId) : null;
-                if (!menu) {
-                    menu = btn.closest('nav, .navbar, .nav-container, .container')?.querySelector('.nav-links, #primary-navigation, .nav-menu');
-                }
-                if (!menu) return;
-
-                const toggle = () => {
-                    const expanded = btn.getAttribute('aria-expanded') === 'true';
-                    btn.setAttribute('aria-expanded', (!expanded).toString());
-                    menu.classList.toggle('active');
-                    menu.classList.toggle('open');
-                    if (menu.hasAttribute('hidden')) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
-                };
-
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggle();
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
                 });
-
-                btn.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!menu.contains(e.target) && !btn.contains(e.target) && menu.classList.contains('active')) {
-                        menu.classList.remove('active', 'open');
-                        btn.setAttribute('aria-expanded', 'false');
-                        menu.setAttribute('hidden', '');
-                    }
-                });
-
-                if (window.innerWidth <= 900 && !menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
-                window.addEventListener('resize', () => {
-                    if (window.innerWidth > 900) {
-                        menu.removeAttribute('hidden');
-                        menu.classList.remove('active', 'open');
-                        btn.setAttribute('aria-expanded', 'false');
-                    } else {
-                        if (!menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
-                    }
-                });
-            });
+            }
         }
 
         // Hero animations
