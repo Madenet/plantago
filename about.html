@@ -249,54 +249,14 @@
         </div>
     </section>
 
-    <!-- Fixed footer structure to match CSS classes -->
-    <div id="footer-placeholder"></div>
+    <!-- inline footer used or omitted — external footer will not be injected -->
 
-    <!-- Simplified JavaScript to work with inline navigation -->
+    <!-- Page scripts — do not fetch external header/footer; keep existing logic -->
     <script>
-        // Load external header and footer
-        async function loadComponent(elementId, filePath) {
-            try {
-                const response = await fetch(filePath);
-                const html = await response.text();
-                document.getElementById(elementId).innerHTML = html;
-            } catch (error) {
-                console.error(`Error loading ${filePath}:`, error);
-            }
-        }
-
-        // Load components when page loads
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadComponent('header-placeholder', 'header.html');
-            await loadComponent('footer-placeholder', 'footer.html');
-
-            // Initialize navigation functionality after header loads
-            setTimeout(() => {
-                initializeNavigation();
-            }, 100);
+        // Initialize navigation only (works with inline nav)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initializeNavigation === 'function') initializeNavigation();
         });
-
-        function initializeNavigation() {
-            // Navbar scroll effect
-            window.addEventListener('scroll', () => {
-                const navbar = document.querySelector('.navbar');
-                if (navbar && window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else if (navbar) {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // Mobile menu toggle
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
-
-            if (hamburger && navLinks) {
-                hamburger.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                });
-            }
-        }
 
         // Hero animations
         window.addEventListener('load', () => {
