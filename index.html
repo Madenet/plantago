@@ -216,7 +216,7 @@
             font-weight: bold;
             margin-bottom: 12px;
             text-shadow: 0 3px 6px rgba(150, 150, 148, 0.418);
-            color:rgba(255, 238, 0, 0.596);
+            color: rgba(255, 238, 0, 0.596);
         }
 
         .carousel-caption p {
@@ -735,20 +735,61 @@
                 }
             });
 
-            // Mobile menu toggle
-            const hamburger = document.querySelector('.hamburger');
-            const nav = document.getElementById('main-nav');
-            const navLinks = document.querySelector('.nav-links');
+            // Attach each hamburger to its corresponding menu
+            const toggles = Array.from(document.querySelectorAll('.hamburger, .nav-toggle, [data-nav-toggle]'));
+            toggles.forEach(btn => {
+                if (btn.dataset.navInit) return;
+                btn.dataset.navInit = '1';
 
-            if (hamburger && nav) {
-                // toggle both nav container and links for CSS to respond
-                hamburger.addEventListener('click', () => {
-                    nav.classList.toggle('open');
-                    if (navLinks) navLinks.classList.toggle('active');
-                    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
-                    hamburger.setAttribute('aria-expanded', (!expanded).toString());
+                if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
+
+                const targetId = btn.getAttribute('aria-controls') || btn.dataset.target || btn.dataset.navTarget;
+                let menu = targetId ? document.getElementById(targetId) : null;
+                if (!menu) {
+                    menu = btn.closest('nav, .navbar, .nav-container, .container')?.querySelector('.nav-links, #primary-navigation, .nav-menu');
+                }
+                if (!menu) return;
+
+                const toggle = () => {
+                    const expanded = btn.getAttribute('aria-expanded') === 'true';
+                    btn.setAttribute('aria-expanded', (!expanded).toString());
+                    menu.classList.toggle('active');
+                    menu.classList.toggle('open');
+                    // fallback to hidden attribute toggle if your CSS uses it
+                    if (menu.hasAttribute('hidden')) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
+                };
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggle();
                 });
-            }
+
+                // keyboard support
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+                });
+
+                // click outside to close
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !btn.contains(e.target) && menu.classList.contains('active')) {
+                        menu.classList.remove('active', 'open');
+                        btn.setAttribute('aria-expanded', 'false');
+                        menu.setAttribute('hidden', '');
+                    }
+                });
+
+                // ensure mobile default state
+                if (window.innerWidth <= 900 && !menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 900) {
+                        menu.removeAttribute('hidden');
+                        menu.classList.remove('active', 'open');
+                        btn.setAttribute('aria-expanded', 'false');
+                    } else {
+                        if (!menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
+                    }
+                });
+            });
         }
 
         // Hero animations
