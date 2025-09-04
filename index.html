@@ -700,27 +700,38 @@
 
         // Load components when page loads
         document.addEventListener('DOMContentLoaded', async () => {
-            await loadComponent('header-placeholder', 'header.html');
-            await loadComponent('footer-placeholder', 'footer.html');
-
-            // inject whatsapp fragment then load its JS so event listeners attach
-            await loadComponent('whatsapp-placeholder', 'whatsapp.html');
-            const s = document.createElement('script');
-            s.src = 'assets/js/whatsapp.js';
-            s.defer = true;
-            document.body.appendChild(s);
-
-            // Initialize navigation after header loads — wait for nav/hamburger to exist
-            async function waitForSelector(selector, timeout = 5000) {
-                const start = Date.now();
-                while (Date.now() - start < timeout) {
-                    if (document.querySelector(selector)) return true;
-                    await new Promise(r => setTimeout(r, 50));
-                }
-                return false;
+            // Only inject header.html if the page does NOT already include a navbar
+            const hasInlineNav = !!document.getElementById('main-nav') || !!document.querySelector('.navbar');
+            if (!hasInlineNav && document.getElementById('header-placeholder')) {
+                await loadComponent('header-placeholder', 'header.html');
             }
 
-            await waitForSelector('#main-nav, .hamburger', 5000);
+            // Footer / whatsapp — only load if placeholders exist
+            if (document.getElementById('footer-placeholder')) {
+                await loadComponent('footer-placeholder', 'footer.html');
+            }
+
+            if (document.getElementById('whatsapp-placeholder')) {
+                await loadComponent('whatsapp-placeholder', 'whatsapp.html');
+                const s = document.createElement('script');
+                s.src = 'assets/js/whatsapp.js';
+                s.defer = true;
+                document.body.appendChild(s);
+            }
+
+            // If we injected a header, wait for its nav; otherwise nav is already present
+            if (!hasInlineNav) {
+                async function waitForSelector(selector, timeout = 5000) {
+                    const start = Date.now();
+                    while (Date.now() - start < timeout) {
+                        if (document.querySelector(selector)) return true;
+                        await new Promise(r => setTimeout(r, 50));
+                    }
+                    return false;
+                }
+                await waitForSelector('#main-nav, .hamburger', 5000);
+            }
+
             initializeNavigation();
         });
 
@@ -735,61 +746,54 @@
                 }
             });
 
-            // Attach each hamburger to its corresponding menu
-            const toggles = Array.from(document.querySelectorAll('.hamburger, .nav-toggle, [data-nav-toggle]'));
-            toggles.forEach(btn => {
-                if (btn.dataset.navInit) return;
-                btn.dataset.navInit = '1';
+            // Mobile menu toggle (non-destructive: don't auto-hide nav; just toggle classes/aria)
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.getElementById('main-nav');
+            const navLinks = document.querySelector('.nav-links');
 
-                if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
+            if (hamburger && nav) {
+                // ensure aria-expanded exists
+                if (!hamburger.hasAttribute('aria-expanded')) hamburger.setAttribute('aria-expanded', 'false');
 
-                const targetId = btn.getAttribute('aria-controls') || btn.dataset.target || btn.dataset.navTarget;
-                let menu = targetId ? document.getElementById(targetId) : null;
-                if (!menu) {
-                    menu = btn.closest('nav, .navbar, .nav-container, .container')?.querySelector('.nav-links, #primary-navigation, .nav-menu');
-                }
-                if (!menu) return;
-
-                const toggle = () => {
-                    const expanded = btn.getAttribute('aria-expanded') === 'true';
-                    btn.setAttribute('aria-expanded', (!expanded).toString());
-                    menu.classList.toggle('active');
-                    menu.classList.toggle('open');
-                    // fallback to hidden attribute toggle if your CSS uses it
-                    if (menu.hasAttribute('hidden')) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
-                };
-
-                btn.addEventListener('click', (e) => {
+                hamburger.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    toggle();
+                    nav.classList.toggle('open');
+                    if (navLinks) navLinks.classList.toggle('active');
+                    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+                    hamburger.setAttribute('aria-expanded', (!expanded).toString());
+                });
+
+                // close on outside click
+                document.addEventListener('click', (e) => {
+                    if (!nav.contains(e.target) && !hamburger.contains(e.target) && nav.classList.contains('open')) {
+                        nav.classList.remove('open');
+                        if (navLinks) navLinks.classList.remove('active');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
                 });
 
                 // keyboard support
-                btn.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-                });
-
-                // click outside to close
-                document.addEventListener('click', (e) => {
-                    if (!menu.contains(e.target) && !btn.contains(e.target) && menu.classList.contains('active')) {
-                        menu.classList.remove('active', 'open');
-                        btn.setAttribute('aria-expanded', 'false');
-                        menu.setAttribute('hidden', '');
+                hamburger.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        hamburger.click();
                     }
                 });
 
-                // ensure mobile default state
-                if (window.innerWidth <= 900 && !menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
+                // keep desktop view intact on resize (do not forcibly hide/show)
+                let lastWindowWidth = window.innerWidth;
                 window.addEventListener('resize', () => {
-                    if (window.innerWidth > 900) {
-                        menu.removeAttribute('hidden');
-                        menu.classList.remove('active', 'open');
-                        btn.setAttribute('aria-expanded', 'false');
-                    } else {
-                        if (!menu.hasAttribute('hidden')) menu.setAttribute('hidden', '');
+                    if (window.innerWidth !== lastWindowWidth) {
+                        lastWindowWidth = window.innerWidth;
+                        // re-evaluate open/close state
+                        if (window.innerWidth > 768 && nav.classList.contains('open')) {
+                            nav.classList.remove('open');
+                            if (navLinks) navLinks.classList.remove('active');
+                            hamburger.setAttribute('aria-expanded', 'false');
+                        }
                     }
                 });
-            });
+            }
         }
 
         // Hero animations
